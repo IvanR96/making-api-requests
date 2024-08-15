@@ -19,5 +19,24 @@ app.get("/", (req, res) =>{
         });
     });
 
-    response.on()
+    response.on("end", () => {
+        try{
+            const result = JSON.parse(data);
+            res.render("index.ejs", {activity: data})
+        }
+        catch(error){
+            console.log("Failed to parse response:", error.message);
+            res.status(500).send("Failed to fetch activity. Please try again");
+        }
+    });
+
+    request.on("error", (error) => {
+        console.error("Failed to make request:", error.message);
+        res.status(500).send("Failed to fetch activity. Please try again");
+    });
+
+    request.end();
 });
+
+
+// ************ simpler version here with axios ***********
