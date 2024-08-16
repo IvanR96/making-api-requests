@@ -1,11 +1,11 @@
-import https from "https"
-import express, { response } from "express";
-import { hostname } from "os";
-import path from "path";
+import axios from "axios";
 
 const app = express();
 
-app.get("/", (req, res) =>{
+
+//************ WITHOUT AXIOS **************
+
+/*app.get("/", (req, res) =>{
     const options = {
         hostname: "bored-api.appbrewery.com",
         path: "/random",
@@ -37,6 +37,16 @@ app.get("/", (req, res) =>{
 
     request.end();
 });
-
+*/
 
 // ************ simpler version here with axios ***********
+
+app.get("/", async (req,res)=>{
+    try{
+        const response = await axios.get("https://bored-api.appbrewery.com/random");
+        res.render("index.ejs", {activity: response.data});
+    } catch(error){
+        console.error("Failed to make request:", error.message);
+        res.status(500).send("Failed to fetch activity. Please try again");
+    }
+});
